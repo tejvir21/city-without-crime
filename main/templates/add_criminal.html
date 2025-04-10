@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}Add Criminal{% endblock %}
+{% block content %}
+<h2>Add Criminal</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select class="form-select" id="gender" name="gender" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="height" class="form-label">Height (cm)</label>
+        <input type="text" class="form-control" id="height" name="height" required>
+    </div>
+    <div class="mb-3">
+        <label for="weight" class="form-label">Weight (kg)</label>
+        <input type="text" class="form-control" id="weight" name="weight" required>
+    </div>
+    <div class="mb-3">
+        <label for="crime_level" class="form-label">Crime Level</label>
+        <input type="text" class="form-control" id="crime_level" name="crime_level" required>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <input type="text" class="form-control" id="status" name="status" required>
+    </div>
+    <div class="mb-3">
+        <label for="picture" class="form-label">Upload Picture</label>
+        <input type="file" class="form-control" id="picture" name="picture" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Criminal</button>
+</form>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% block title %}Edit Criminal{% endblock %}
+{% block content %}
+<h2>Edit Criminal</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" class="form-control" id="name" name="name" value="{{ criminal.name }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="gender" class="form-label">Gender</label>
+        <select class="form-select" id="gender" name="gender" required>
+            <option value="Male" {% if criminal.gender == "Male" %}selected{% endif %}>Male</option>
+            <option value="Female" {% if criminal.gender == "Female" %}selected{% endif %}>Female</option>
+            <option value="Other" {% if criminal.gender == "Other" %}selected{% endif %}>Other</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="height" class="form-label">Height (cm)</label>
+        <input type="text" class="form-control" id="height" name="height" value="{{ criminal.height }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="weight" class="form-label">Weight (kg)</label>
+        <input type="text" class="form-control" id="weight" name="weight" value="{{ criminal.weight }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="crime_level" class="form-label">Crime Level</label>
+        <input type="text" class="form-control" id="crime_level" name="crime_level" value="{{ criminal.crime_level }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <input type="text" class="form-control" id="status" name="status" value="{{ criminal.status }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="picture" class="form-label">Upload Picture</label>
+        <input type="file" class="form-control" id="picture" name="picture">
+    </div>
+    <button type="submit" class="btn btn-primary">Update Criminal</button>
+</form>
+{% endblock %}

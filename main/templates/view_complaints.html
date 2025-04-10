@@ -1,0 +1,25 @@
+{% extends 'layout.html' %}
+{% block title %}View Complaints{% endblock %}
+{% block content %}
+<h2>Your Complaints</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Status</th>
+            <th>Date Lodged</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for complaint in complaints %}
+        <tr>
+            <td>{{ complaint.id }}</td>
+            <td>{{ complaint.description }}</td>
+            <td>{{ complaint.status }}</td>
+            <td>{{ complaint.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

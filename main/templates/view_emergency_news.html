@@ -1,0 +1,23 @@
+{% extends 'layout.html' %}
+{% block title %}Emergency News{% endblock %}
+{% block content %}
+<h2>Emergency News</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Description</th>
+            <th>Published Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for news in emergencies %}
+        <tr>
+            <td>{{ news.id }}</td>
+            <td>{{ news.description }}</td>
+            <td>{{ news.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

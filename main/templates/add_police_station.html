@@ -1,0 +1,33 @@
+{% extends 'layout.html' %}
+{% block title %}Add Police Station{% endblock %}
+{% block content %}
+<h2>Add Police Station</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="name" class="form-label">Station Name</label>
+        <input type="text" class="form-control" id="name" name="name" required>
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <textarea class="form-control" id="address" name="address" rows="3" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="text" class="form-control" id="phone" name="phone" required>
+    </div>
+    <div class="mb-3">
+        <label for="mobile" class="form-label">Mobile</label>
+        <input type="text" class="form-control" id="mobile" name="mobile" required>
+    </div>
+    <div class="mb-3">
+        <label for="head_officer" class="form-label">Head Officer</label>
+        <input type="text" class="form-control" id="head_officer" name="head_officer" required>
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Police Station</button>
+</form>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block title %}Home - City Without Crime{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1 class="display-4">Welcome to City Without Crime</h1>
+    <p class="lead">Your safety, our responsibility. Use the platform to report crimes, manage police activities, and stay updated on emergencies.</p>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Citizens</h5>
+                <p class="card-text">Report crimes and track the status of your complaints with ease.</p>
+                <a href="{% url 'register' %}" class="btn btn-primary">Get Started</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Police Stations</h5>
+                <p class="card-text">Log in to manage complaints and maintain criminal records efficiently.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body text-center">
+                <h5 class="card-title">Admin</h5>
+                <p class="card-text">Oversee the entire city’s crime reports and manage police station activities.</p>
+                <a href="{% url 'login' %}" class="btn btn-primary">Admin Login</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5">
+    <h2 class="text-center">Latest Emergency Updates</h2>
+    <div class="list-group mt-3">
+        {% for news in emergencies %}
+        <a href="{% url 'view_emergency_news' %}" class="list-group-item list-group-item-action">
+            {{ news.description }} <span class="badge bg-secondary float-end">{{ news.created_at|date:"d M Y" }}</span>
+        </a>
+        {% empty %}
+        <p class="text-center">No emergency updates available.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
