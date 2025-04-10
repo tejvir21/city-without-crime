@@ -1,0 +1,30 @@
+
+---
+
+### `.gitignore`
+
+```plaintext
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.sqlite3
+
+# Virtual Environment
+venv/
+env/
+
+# Django
+db.sqlite3
+/media/
+*.log
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+
+# OS Files
+.DS_Store
+Thumbs.db

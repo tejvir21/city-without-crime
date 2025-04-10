@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+{% block title %}Lodge Complaint{% endblock %}
+{% block content %}
+<h2>Lodge Complaint</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label for="description" class="form-label">Complaint Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="police_station" class="form-label">Select Police Station</label>
+        <select class="form-select" id="police_station" name="police_station" required>
+            {% for station in stations %}
+            <option value="{{ station.id }}">{{ station.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}

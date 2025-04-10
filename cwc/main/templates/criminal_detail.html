@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block title %}Criminal Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2 class="text-center mt-3">Criminal Details</h2>
+    <div class="card mx-auto" style="max-width: 600px;">
+        <img src="{{ criminal.picture.url }}" class="card-img-top" alt="Criminal Image">
+        <div class="card-body">
+            <h4 class="card-title">{{ criminal.name }}</h4>
+            <p><strong>Gender:</strong> {{ criminal.gender }}</p>
+            <p><strong>Height:</strong> {{ criminal.height }} cm</p>
+            <p><strong>Weight:</strong> {{ criminal.weight }} kg</p>
+            <p><strong>Crime Level:</strong> {{ criminal.crime_level }}</p>
+            <p><strong>Status:</strong> {{ criminal.status }}</p>
+            <a href="{% url 'police_station_dashboard' %}" class="btn btn-secondary">Back to List</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
