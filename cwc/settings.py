@@ -26,7 +26,7 @@ env.read_env(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-^0!dwb)o*g)4sy*e1f5!z%cpmvuq#x=bg7x%c!$9rc7q!q6_k%'
+SECRET_KEY = env.str("SECRET_KEY", default="django-insecure-^0!dwb)o*g)4sy*e1f5!z%cpmvuq#x=bg7x%c!$9rc7q!q6_k%")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -124,20 +124,21 @@ USE_I18N = True
 
 USE_TZ = True
 
+import os
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
 
-import os
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 MEDIA_URL = '/media/'  # URL to access media files
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Directory to store media files
-
-# Add static settings (if not already present)
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 # Default primary key field type
