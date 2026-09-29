@@ -9,12 +9,27 @@ from .models import *
 
 def home_page(request):
     emergencies = Emergency.objects.order_by('-created_at')[:5]
+    print(request.user)
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin_dashboard')
+        station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
+        if station:
+            return redirect('police_station_dashboard')
+        else:
+            return redirect('dashboard')
     return render(request, 'home.html', {'emergencies': emergencies})
 
 # User Module Views
 def register_user(request):
     if request.user.is_authenticated:
-        return HttpResponse(f"<H1>You are already Logged in as <u>{request.user.username}<u></h1>")
+        if request.user.is_superuser:
+            return redirect('admin_dashboard')
+        station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
+        if station:
+            return redirect('police_station_dashboard')
+        else:
+            return redirect('dashboard')
     else:
         if request.method == 'POST':
             username = request.POST['username']
@@ -22,11 +37,11 @@ def register_user(request):
             email = request.POST['email']
             full_name = request.POST['full_name']
 
-            if User.objects.filter(username=username).exists():
+            if User.objects.filter(username=username.lower()).exists():
                 messages.error(request, "Username already exists!")
                 return redirect('register')
 
-            user = User.objects.create_user(username=username, password=password, email=email, first_name=full_name)
+            user = User.objects.create_user(username=username.replace(" ", "_").lower(), password=password, email=email, first_name=full_name.split(" ")[0], last_name=full_name.split(" ")[1])
             user.save()
             messages.success(request, "Registration successful!")
             return redirect('login')
@@ -36,17 +51,23 @@ def register_user(request):
 
 def login_user(request):
     if request.user.is_authenticated:
-        return HttpResponse(f"<H1>You are already Logged in as <u>{request.user.username}<u></h1>")
+        if request.user.is_superuser:
+            return redirect('admin_dashboard')
+        station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
+        if station:
+            return redirect('police_station_dashboard')
+        else:
+            return redirect('dashboard')
     else:
         if request.method == 'POST':
             username = request.POST['username']
             password = request.POST['password']
 
-            user = authenticate(request, username=username, password=password)
+            user = authenticate(request, username=username.lower(), password=password)
                         
             if user:
                 login(request, user)
-                station = PoliceStation.objects.filter(head_officer=user.username)
+                station = PoliceStation.objects.filter(name=user.username.lower())
                 if station:
                     return redirect('police_station_dashboard')
                 elif user.is_superuser:
@@ -64,6 +85,12 @@ def logout_user(request):
 
 @login_required(login_url="login")
 def user_dashboard(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            return redirect('admin_dashboard')
+        station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
+        if station:
+            return redirect('police_station_dashboard')
     return render(request, 'dashboard.html')
 
 
@@ -90,9 +117,12 @@ def view_complaints(request):
 # Police Station Module Views
 @login_required(login_url="login")
 def police_station_dashboard(request):
-    station = PoliceStation.objects.filter(head_officer=request.user.username)
+    if request.user.is_authenticated:
+        if not request.user.is_staff:
+            return redirect('dashboard')
+    station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
     if station:
-        station = PoliceStation.objects.get(head_officer=request.user.username)
+        station = PoliceStation.objects.get(name=request.user.username.replace("_", " ").title())
         complaints = Complaint.objects.filter(police_station=station)
         criminals = Criminal.objects.all()
         
@@ -103,7 +133,10 @@ def police_station_dashboard(request):
 
 @login_required(login_url="login")
 def update_complaint_status(request, complaint_id):
-    complaint = Complaint.objects.filter(id=complaint_id, police_station__head_officer=request.user)
+    if request.user.is_authenticated:
+        if not request.user.is_staff:
+            return redirect('dashboard')
+    complaint = Complaint.objects.filter(id=complaint_id, police_station__name=request.user)
     if complaint:
         if request.method == 'POST':
             status = request.POST['status']
@@ -137,14 +170,20 @@ def add_police_station(request):
             password = request.POST['password']
 
             station = PoliceStation.objects.create(
-                name=name,
+                name=name.replace("_", " ").title(),
                 address=address,
                 phone=phone,
                 mobile=mobile,
                 head_officer=head_officer,
                 password=password,
             )
+
+            if User.objects.filter(username=name.replace(" ", "_").lower()).exists():
+                messages.error(request, "Username already exists!")
+            user = User.objects.create_user(username=name.replace(" ", "_").lower(), password=password, is_staff=True)
+
             station.save()
+            user.save()
             messages.success(request, "Police Station added successfully!")
             return redirect('admin_dashboard')
 
@@ -166,7 +205,10 @@ def delete_police_station(request, station_id):
 
 @login_required(login_url="login")
 def add_criminal(request):
-    station = PoliceStation.objects.filter(head_officer=request.user.username)
+    if request.user.is_authenticated:
+        if not request.user.is_staff:
+            return redirect('dashboard')
+    station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
     if station:
     
         if request.method == 'POST':
@@ -202,7 +244,10 @@ def criminal_detail(request, criminal_id):
 
 @login_required(login_url="login")
 def edit_criminal(request, criminal_id):
-    station = PoliceStation.objects.filter(head_officer=request.user.username)
+    if request.user.is_authenticated:
+        if not request.user.is_staff:
+            return redirect('dashboard')
+    station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
     if station:
         
         criminal = Criminal.objects.get(id=criminal_id)
@@ -226,7 +271,10 @@ def edit_criminal(request, criminal_id):
 
 @login_required(login_url="login")
 def delete_criminal(request, criminal_id):
-    station = PoliceStation.objects.filter(head_officer=request.user.username)
+    if request.user.is_authenticated:
+        if not request.user.is_staff:
+            return redirect('dashboard')
+    station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
     if station:
         
         criminal = Criminal.objects.get(id=criminal_id)
@@ -240,7 +288,10 @@ def delete_criminal(request, criminal_id):
 
 @login_required(login_url="login")
 def add_emergency_news(request):
-    station = PoliceStation.objects.filter(head_officer=request.user.username)
+    if request.user.is_authenticated:
+        if not request.user.is_staff:
+            return redirect('dashboard')
+    station = PoliceStation.objects.filter(name=request.user.username.replace("_", " ").title())
     if station:
         if request.method == 'POST':
             description = request.POST['description']
